@@ -1,5 +1,7 @@
 #! /usr/bin/bash
 
+
+
 DEST="/etc/ssh/sshd_config"
 
 # Update and install openssh-server
@@ -8,6 +10,9 @@ apt-get install openssh-server
 
 # Disable password authentication
 sed -i "s/#PasswordAuthentication no/PasswordAuthentication no/g" "$DEST"
+
+read -p "Do you want to disable password authentication? (y/n): "
+
 sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/g" "$DEST"
 
 # Disable root login
