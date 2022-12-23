@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
 
+
 CUR_HNAME=$(cat /etc/hostname)
 
 read -p "New Hostname: " HNAME
@@ -12,6 +13,9 @@ echo $HNAME > /etc/hostname
 sed -i "s/$CUR_HNAME/$HNAME/g" /etc/hosts
 
 # Inform user
-echo "Hostname \"$CUR_HNAME\" changed with \"$HNAME\""
-
 # If the new hostname is same as old hostname inform user
+
+if [[ "$CUR_HNAME" == "$HNAME" ]]; then
+	echo "Hostname \"$CUR_HNAME\" remains unchanged"
+else
+	echo "Hostname \"$CUR_HNAME\" changed with \"$HNAME\""

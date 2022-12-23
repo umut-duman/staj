@@ -1,6 +1,11 @@
 #! /usr/bin/bash
 
-VHOST="examplesite.com"
+
+
+apt-get update
+apt-get install nginx
+
+read -p "Your domain name: " VHOST
 
 # Create site dir for VHOST
 mkdir -p "/var/www/$VHOST/html"
@@ -24,8 +29,7 @@ server {
 
 echo "$VH_CONF" > /etc/nginx/sites-available/$VHOST
 
- Enable VHOST
-
+#Enable VHOST
 ln -s /etc/nginx/sites-available/$VHOST /etc/nginx/sites-enabled/$VHOST
 
 # Remove default nginx site

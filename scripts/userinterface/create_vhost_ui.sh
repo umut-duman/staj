@@ -1,8 +1,11 @@
 #! /usr/bin/bash
 
-#VHOST="examplesite.com"
-VHOST=$(whiptail --inputbox "Your domain name" 16 64 --title "Create Virtual Host" 3>&1 1>&2 2>&3)
+TITLE="Create Virtual Host"
 
+apt-get update
+apt*get install nginx
+
+VHOST=$(whiptail --inputbox "Your domain name" 16 64 --title "$TITLE" 3>&1 1>&2 2>&3)
 
 # Create site dir for VHOST
 mkdir -p "/var/www/$VHOST/html"
