@@ -1,7 +1,9 @@
 #!/usr/bin/bash
 
-HNAME="client"
-CUR_HNAME="old"
+
+CUR_HNAME=$(cat /etc/hostname)
+
+read -p "New Hostname: " HNAME
 
 # Update /etc/hostname file
 echo $HNAME > /etc/hostname
@@ -9,3 +11,5 @@ echo $HNAME > /etc/hostname
 # Update /etc/hosts file
 sed -i "s/$CUR_HNAME/$HNAME/g" /etc/hosts
 
+# Inform user
+echo "Hostname \"$CUR_HNAME\" changed with \"$HNAME\""
