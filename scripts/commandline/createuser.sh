@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
-UNAME=duman
+read -p "Username: " UNAME
 
 useradd -mU $UNAME
+
+echo "User \"$UNAME\" created"
