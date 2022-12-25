@@ -4,6 +4,7 @@
 
 DEST="/etc/network/interfaces"
 
+# Read necessary data from user
 read -p "interface: " IFACE
 read -p "ip address: " IP_ADDR
 read -p "netmask: " NETMASK

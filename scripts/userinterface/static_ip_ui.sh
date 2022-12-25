@@ -4,6 +4,7 @@ TITLE="Configure Static IP"
 
 DEST="/etc/network/interfaces"
 
+# Read necessary data from user
 IFACE=$(whiptail --title "$TITLE" --inputbox "Interface" 16 64 3>&1 1>&2 2>&3)
 IP_ADDR=$(whiptail --title "$TITLE" --inputbox "IP Address" 16 64 3>&1 1>&2 2>&3)
 NETMASK=$(whiptail --title "$TITLE" --inputbox "Netmask" 16 64 3>&1 1>&2 2>&3)
