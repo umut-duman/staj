@@ -16,7 +16,7 @@ if (whiptail --title "$TITLE" --yesno "Do you want to disable password authentic
 
   whiptail --title "$TITLE" --msgbox "Password authentication disabled" 16 64
 else
-  sed -i "s/PasswordAuthentication on/PasswordAuthentication yes/g" "$DEST"
+  sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" "$DEST"
 
   whiptail --title "$TITLE" --msgbox "Password authentication enabled" 16 64
 fi
