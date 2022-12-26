@@ -14,8 +14,18 @@ esac
 done
 }
 
-
-Help
+while [ -n "$1" ]; do
+	case "$1" in
+        -h | --help | h )
+            Help
+            exit
+            ;;
+     	-* | * )
+			echo "ERROR Unknown parameter"
+            exit
+                ;;
+    esac
+done
 
 if read_yesno "Do you want to change the hostname of this computer? (yes/no): "; then
 	echo "Changing hostname..."
