@@ -1,0 +1,159 @@
+#! /usr/bin/bash
+
+
+Help() {
+cat <<-END
+Basic script for making basic configurations on a host
+END
+}
+
+# Ask user for a new hostname
+changehostname() {
+CUR_HNAME=$(cat /etc/hostname)
+
+read -p "New Hostname: " HNAME
+
+# Update /etc/hostname file
+echo $HNAME > /etc/hostname
+
+# Update /etc/hosts file
+sed -i "s/$CUR_HNAME/$HNAME/g" /etc/hosts
+
+# Inform user
+# If the new hostname is same as old hostname inform user
+
+if [[ "$CUR_HNAME" == "$HNAME" ]]; then
+echo "Hostname \"$CUR_HNAME\" remains unchanged"
+else
+echo "Hostname \"$CUR_HNAME\" changed with \"$HNAME\""
+fi
+}
+
+# Create a new user with a given input
+createuser() {
+read -p "Username: " UNAME
+
+useradd -mU $UNAME
+
+echo "User \"$UNAME\" created"
+}
+
+
+# insatll openssh-server and do some basic configurations with user input
+configssh() {
+SSHDEST="/etc/ssh/sshd_config"
+
+# Update and install openssh-server
+apt-get update
+apt-get install openssh-server
+
+# Ask and accordingly disable password authentication
+sed -i "s/#PasswordAuthentication no/PasswordAuthentication no/g" "$SSHDEST"
+
+read -p "Do you want to disable password authentication? (yes/no): " ssh_yn1
+if [ $ssh_yn1 == "yes" ]; then
+    sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/g" "$SSHDEST"
+
+    echo "Password authentication disabled"
+else
+    sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" "$SSHDEST"
+
+    echo "Password authentication enabled"
+fi
+
+# Ask and accordingly disable root login
+sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin no/g" "$SSHDEST"
+
+read -p "Do you want to disable root login? (yes/no): " ssh_yn2
+if [ $ssh_yn2 == "yes" ]; then
+    sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" "$SSHDEST"
+
+    echo "Root login disabled"
+else
+    sed -i "s/PermitRootLogin no/PermitRootLogin yes/g" "$SSHDEST"
+
+    echo "Root login enabled"
+fi
+
+# Check and see if .ssh exists and ask to create it if it is not
+if [ ! -d "$HOME/.ssh" ]; then
+    read -p "$HOME/.ssh does not exist. Do you want to create it? (yes/no): " ssh_yn3
+    if [ $ssh_yn3 == "yes" ]; then
+        mkdir $HOME/.ssh
+        touch $HOME/.ssh/id_rsa
+        touch $HOME/.ssh/id_rsa.pub
+
+        echo "Created the directory $HOME/.ssh"
+    else
+        echo "Did not create directory $HOME/.ssh"
+    fi
+fi    
+
+# Restart sshd
+systemctl restart sshd.service
+
+}
+
+# Configure static ip
+staticip() {
+IPDEST="/etc/network/interfaces"
+
+# Read necessary data from user
+read -p "interface: " IFACE
+read -p "ip address: " IP_ADDR
+read -p "netmask: " NETMASK
+read -p "gateway: " GATEWAY
+
+# Disable dhcp
+sed -i "s/iface $IFACE inet dhcp//g" "$IPDEST"
+
+# Set iface config for static ip
+echo "" >> $IPDEST
+echo "iface $IFACE inet static" >> $IPDEST
+echo "  address $IP_ADDR" >> $IPDEST
+echo "  netmask $NETMASK" >> $IPDEST
+echo "  gateway $GATEWAY" >> $IPDEST
+
+# Restart network
+systemctl restart networking.service
+}
+
+# Install nginx and configure a vhost
+nginxvhost() {
+
+apt-get update
+apt-get install nginx
+
+read -p "Your domain name: " VHOST
+
+# Create site dir for VHOST
+mkdir -p "/var/www/$VHOST/html"
+
+# Copy nginx conf for VHOST
+VH_CONF="
+server {
+  listen 80;
+  listen [::]:80;
+
+  root /var/www/$VHOST/html;
+  index index.html index.htm index.nginx-debian.html
+
+  servername $VHOST www.$VHOST;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+}
+"
+
+echo "$VH_CONF" > /etc/nginx/sites-available/$VHOST
+
+#Enable VHOST
+ln -s /etc/nginx/sites-available/$VHOST /etc/nginx/sites-enabled/$VHOST
+
+# Remove default nginx site
+rm -r /etc/nginx/sites-enabled/default
+
+# Restart nginx
+systemctl restart nginx
+}

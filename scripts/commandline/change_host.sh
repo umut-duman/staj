@@ -19,3 +19,4 @@ if [[ "$CUR_HNAME" == "$HNAME" ]]; then
 	echo "Hostname \"$CUR_HNAME\" remains unchanged"
 else
 	echo "Hostname \"$CUR_HNAME\" changed with \"$HNAME\""
+fi

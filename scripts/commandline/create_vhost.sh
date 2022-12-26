@@ -1,5 +1,6 @@
 #! /usr/bin/bash
 
+# Install nginx and configure a vhost
 
 
 apt-get update
