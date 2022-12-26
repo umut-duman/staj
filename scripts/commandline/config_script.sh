@@ -14,6 +14,8 @@ esac
 done
 }
 
+Help
+
 if read_yesno "Do you want to change the hostname of this computer? (yes/no): "; then
 	echo "Changing hostname..."
 
