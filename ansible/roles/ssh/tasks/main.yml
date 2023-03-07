@@ -1,0 +1,4 @@
+---
+# ssh tasks
+- include: install.yml
+- include: config.yml

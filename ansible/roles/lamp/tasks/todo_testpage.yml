@@ -1,0 +1,5 @@
+---
+- name: Copy example php file into web server
+  copy:
+    src: ../templates/todo_list.php
+    dest: /var/www/html/todo_list.php

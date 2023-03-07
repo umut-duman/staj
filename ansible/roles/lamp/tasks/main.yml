@@ -1,0 +1,5 @@
+---
+- include: lamp.yml
+- include: createdb.yml
+- include: createdbuser.yml
+- include: todo_testpage.yml

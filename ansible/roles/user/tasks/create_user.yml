@@ -1,0 +1,11 @@
+---
+- name: Add group duman-vm
+  group:
+    name: duman-vm
+
+- name: Create a user named duman-vm
+  user:
+    name: duman-vm
+    group: duman-vm
+    shell: /usr/bin/bash
+    password: $y$j9T$Xo33V91NiDaiRbMhpu6yi/$Gc.H3iCnoRzJQguyS/aGgMSvbje4Jyiu7aQZ9IpIh34
