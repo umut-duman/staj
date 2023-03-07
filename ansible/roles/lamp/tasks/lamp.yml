@@ -7,12 +7,14 @@
     - php
     - libapache2-mod-php
     - php-mysql
+    - python3-pexpect
     state: latest
 
 - name: mysql_secure_installation
   expect:
     command: mysql_secure_installation
     responses:
+      'Switch to unix_socket authentication': 'n'
       'Enter current password for root': ''
       'Set root password?': 'n'
       'Change the root password?': 'n'
